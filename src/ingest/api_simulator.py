@@ -19,29 +19,51 @@ class Review(BaseModel):
 
 RESTAURANTS = [
     ("La Taquería Central", "CDMX"),
+    ("Tacos El Guero", "CDMX"),
+    ("Café Roma", "CDMX"),
+    ("Ramen Shibuya", "CDMX"),
+    ("Mariscos Don Neto", "CDMX"),
     ("Sushi Nami", "Monterrey"),
+    ("Asador del Norte", "Monterrey"),
+    ("Café Obispado", "Monterrey"),
+    ("Pizza Sierra Madre", "Monterrey"),
+    ("Tortas La Estación", "Monterrey"),
     ("Pasta & Co.", "Guadalajara"),
+    ("Birria La Tradición", "Guadalajara"),
+    ("Café Chapultepec", "Guadalajara"),
+    ("Sushi Andares", "Guadalajara"),
+    ("Tacos Providencia", "Guadalajara"),
     ("Burger Station", "Puebla"),
+    ("Mole & Más", "Puebla"),
+    ("Cemitas La Casa", "Puebla"),
+    ("Café Zócalo", "Puebla"),
+    ("Antojitos Angelópolis", "Puebla"),
     ("Café Aurora", "Querétaro"),
+    ("Tacos La Alameda", "Querétaro"),
+    ("Sushi Juriquilla", "Querétaro"),
+    ("Pasta Centro", "Querétaro"),
+    ("La Parrilla QRO", "Querétaro"),
 ]
 
-TEXTS_POS = [
-    "Excelente servicio y la comida estuvo deliciosa, volveré pronto.",
-    "Muy buena atención, el sabor fue increíble y las porciones perfectas.",
-    "Me encantó el lugar, todo limpio y el staff muy amable.",
-]
 
-TEXTS_NEG = [
-    "La comida llegó fría y el servicio fue muy lento.",
-    "Mala experiencia, el personal fue grosero y la comida no tenía sabor.",
-    "Demasiado caro para lo que ofrecen, no lo recomiendo.",
-]
+ADJ_POS = ["deliciosa", "increíble", "excelente", "espectacular", "muy buena"]
+ADJ_NEG = ["fría", "insípida", "mala", "terrible", "decepcionante"]
+SERVICE_POS = ["muy amable", "rápido", "atento", "excelente", "cordial"]
+SERVICE_NEG = ["lento", "grosero", "desorganizado", "pésimo", "muy tardado"]
+ITEMS = ["tacos", "ramen", "pizza", "café", "postre", "hamburguesa", "birria", "mariscos", "pasta"]
+EXTRAS = ["volveré pronto", "lo recomiendo", "no regreso", "no lo recomiendo", "podría mejorar", "fue una sorpresa"]
 
-TEXTS_NEU = [
-    "El lugar está bien, nada extraordinario pero cumple.",
-    "La comida estuvo normal, el servicio aceptable.",
-    "Una experiencia promedio, podría mejorar.",
-]
+def make_text(stars: int) -> str:
+    item = random.choice(ITEMS)
+    extra = random.choice(EXTRAS)
+
+    if stars >= 4:
+        return f"El {item} estuvo {random.choice(ADJ_POS)} y el servicio fue {random.choice(SERVICE_POS)}; {extra}."
+    elif stars <= 2:
+        return f"El {item} estuvo {random.choice(ADJ_NEG)} y el servicio fue {random.choice(SERVICE_NEG)}; {extra}."
+    else:
+        return f"El {item} estuvo normal y el servicio fue aceptable; {extra}."
+
 
 
 def generate_reviews(n: int, seed: Optional[int] = None) -> List[Review]:
@@ -55,12 +77,7 @@ def generate_reviews(n: int, seed: Optional[int] = None) -> List[Review]:
         name, city = random.choice(RESTAURANTS)
         stars = random.choices([1, 2, 3, 4, 5], weights=[8, 10, 20, 30, 32])[0]
 
-        if stars >= 4:
-            text = random.choice(TEXTS_POS)
-        elif stars <= 2:
-            text = random.choice(TEXTS_NEG)
-        else:
-            text = random.choice(TEXTS_NEU)
+        text = make_text(stars) + f" (ticket:{random.randint(1000,9999)})"
 
         created_at = (now - timedelta(minutes=random.randint(1, 20000))).isoformat()
 

@@ -21,7 +21,7 @@ def save_raw(df: pd.DataFrame) -> Path:
     return out_path
 
 def main():
-    df = fetch_reviews(limit=300, seed=42)
+    df = fetch_reviews(limit=500, seed=42)
     path = save_raw(df)
     print(f"Guardado: {path} | rows={len(df)}")
 
