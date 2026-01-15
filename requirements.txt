@@ -20,3 +20,7 @@ torch
 mlflow
 dvc
 python-dotenv
+
+pytest
+pytest-cov
+
